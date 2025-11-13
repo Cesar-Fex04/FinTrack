@@ -32,10 +32,11 @@ namespace GestionGastos.Models
 
         // --- Listas que NO se validan ---
 
-        [ValidateNever] // <-- Esta es la instrucción para IGNORAR la lista
+        [ValidateNever] // <-- Ignora la validación de esta lista
         public IEnumerable<SelectListItem> Categorias { get; set; }
 
-        [ValidateNever] // <-- Esta es la instrucción para IGNORAR la lista
+        [ValidateNever] // <-- Ignora la validación de esta lista
         public IEnumerable<SelectListItem> TiposMovimiento { get; set; }
+
     }
 }

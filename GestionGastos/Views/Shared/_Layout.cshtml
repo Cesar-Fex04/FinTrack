@@ -1,59 +1,184 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - GestionGastos</title>
+    <title>@ViewData["Title"] - FinTrack</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GestionGastos.styles.css" asp-append-version="true" />
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GestionGastos</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-wallet sidebar-logo-icon"></i>
+                <h4 class="sidebar-title mb-0">FinTrack</h4>
+            </div>
+            <button class="sidebar-toggle" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
+        <div class="sidebar-menu">
+            <a asp-controller="Home" asp-action="Index" class="sidebar-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ReporteMensual">Reporte</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Presupuesto" asp-action="Verificar">Presupuestos</a>
-                        </li>
+            <a asp-controller="Gastos" asp-action="Crear" class="sidebar-item">
+                <i class="fas fa-minus-circle"></i>
+                <span>Registrar Gasto</span>
+            </a>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Gastos" asp-action="Crear">Crear Gasto</a>
-                        </li>
-                    </ul>
+            <a asp-controller="Home" asp-action="ReporteMensual" class="sidebar-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Reporte Mensual</span>
+            </a>
 
+          
+            <a asp-controller="Categorias" asp-action="Index" class="sidebar-item">
+                <i class="fas fa-tags"></i>
+                <span>Categorías</span>
+            </a>
+            
+            <a asp-controller="Presupuesto" asp-action="Index" class="sidebar-item">
+                <i class="fas fa-calculator"></i>
+                <span>Verificar Presupuesto</span>
+            </a>
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section-title">
+                <i class="fas fa-cog"></i>
+                <span>Configuración</span>
+            </div>
+
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-tags"></i>
+                <span>Categorías</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-coins"></i>
+                <span>Ingresos</span>
+            </a>
+
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-bullseye"></i>
+                <span>Metas Financieras</span>
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">Usuario Demo</div>
+                    <div class="sidebar-user-email">demo@fintrack.com</div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - GestionGastos - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- Overlay para cerrar sidebar en móvil -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Contenido Principal -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Navbar -->
+        <nav class="top-navbar">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="top-navbar-title">
+                @ViewData["Title"]
+            </div>
+
+            <div class="top-navbar-actions">
+                <button class="top-navbar-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="top-navbar-btn">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Contenido de la página -->
+        <div class="content-wrapper">
+            <main role="main">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span>&copy; 2025 FinTrack - Tu control financiero personal</span>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a asp-controller="Home" asp-action="Privacy" class="footer-link">Privacidad</a>
+                        <span class="mx-2">|</span>
+                        <a href="#" class="footer-link">Soporte</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Script del Sidebar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const mainContent = document.getElementById('mainContent');
+
+            // Función para abrir sidebar
+            function openSidebar() {
+                sidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Función para cerrar sidebar
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // Toggle sidebar
+            sidebarToggle.addEventListener('click', openSidebar);
+            sidebarClose.addEventListener('click', closeSidebar);
+            sidebarOverlay.addEventListener('click', closeSidebar);
+
+            // Marcar item activo
+            const currentPath = window.location.pathname;
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+            sidebarItems.forEach(item => {
+                if (item.getAttribute('href') === currentPath) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

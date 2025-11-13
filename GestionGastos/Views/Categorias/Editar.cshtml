@@ -1,0 +1,206 @@
+﻿@model GestionGastos.Models.Categoria
+@{
+    ViewData["Title"] = "Editar Categoría";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="mb-4">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+            <h2 class="fw-bold">
+                <i class="fas fa-edit me-2" style="color: #93BFC7;"></i>
+                Editar Categoría
+            </h2>
+            <p class="text-muted">Modifica los datos de la categoría existente</p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+                <form asp-action="Editar" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="id_categoria" />
+                    <input type="hidden" asp-for="imagen_url" />
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <!-- Nombre -->
+                    <div class="mb-4">
+                        <label asp-for="nombre" class="form-label fw-semibold">
+                            <i class="fas fa-tag me-2 text-primary"></i>Nombre de la Categoría
+                        </label>
+                        <input asp-for="nombre" class="form-control form-control-lg"
+                               placeholder="Ej: Alimentos, Transporte, Salario..." />
+                        <span asp-validation-for="nombre" class="text-danger"></span>
+                    </div>
+
+                    <!-- Tipo -->
+                    <div class="mb-4">
+                        <label asp-for="tipo" class="form-label fw-semibold">
+                            <i class="fas fa-exchange-alt me-2 text-primary"></i>Tipo de Categoría
+                        </label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-check-card">
+                                    <input class="form-check-input" type="radio" asp-for="tipo"
+                                           value="Gasto" id="tipoGasto">
+                                    <label class="form-check-label card-selectable" for="tipoGasto">
+                                        <div class="card border-2 h-100">
+                                            <div class="card-body text-center p-3">
+                                                <i class="fas fa-minus-circle fa-3x mb-2" style="color: #ff7849;"></i>
+                                                <h5 class="mb-0">Gasto</h5>
+                                                <small class="text-muted">Dinero que sale</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-check-card">
+                                    <input class="form-check-input" type="radio" asp-for="tipo"
+                                           value="Ingreso" id="tipoIngreso">
+                                    <label class="form-check-label card-selectable" for="tipoIngreso">
+                                        <div class="card border-2 h-100">
+                                            <div class="card-body text-center p-3">
+                                                <i class="fas fa-plus-circle fa-3x mb-2" style="color: #4ade80;"></i>
+                                                <h5 class="mb-0">Ingreso</h5>
+                                                <small class="text-muted">Dinero que entra</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <span asp-validation-for="tipo" class="text-danger"></span>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="mb-4">
+                        <label asp-for="descripcion" class="form-label fw-semibold">
+                            <i class="fas fa-align-left me-2 text-primary"></i>Descripción (Opcional)
+                        </label>
+                        <textarea asp-for="descripcion" class="form-control" rows="3"
+                                  placeholder="Agrega una descripción breve de esta categoría..."></textarea>
+                        <span asp-validation-for="descripcion" class="text-danger"></span>
+                    </div>
+
+                    <!-- Imagen -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-image me-2 text-primary"></i>Imagen de la Categoría
+                        </label>
+                        <div class="card border-2 border-dashed p-4">
+                            <div class="text-center mb-3">
+                                <!-- Mostrar imagen actual -->
+                                <img id="imagePreview"
+                                     src="@(string.IsNullOrEmpty(Model.imagen_url) ? "/images/categorias/default.png" : Model.imagen_url)"
+                                     class="rounded-circle shadow-sm mb-3"
+                                     style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #ABE7B2;"
+                                     onerror="this.src='/images/categorias/default.png'">
+
+                                <div class="mb-2">
+                                    <small class="text-muted">Imagen actual</small>
+                                </div>
+
+                                <div>
+                                    <label for="imageInput" class="btn btn-outline-primary">
+                                        <i class="fas fa-upload me-2"></i>Cambiar Imagen
+                                    </label>
+                                    <input asp-for="ImagenArchivo" type="file" class="d-none"
+                                           accept="image/*" id="imageInput"
+                                           onchange="previewImage(this)">
+                                </div>
+
+                                <small class="text-muted d-block mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Deja en blanco para mantener la imagen actual
+                                </small>
+                            </div>
+                        </div>
+                        <span asp-validation-for="ImagenArchivo" class="text-danger"></span>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-lg"
+                                style="background: linear-gradient(135deg, #93BFC7 0%, #6b9fa8 100%); color: white; font-weight: 600;">
+                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-check-card {
+        position: relative;
+    }
+
+        .form-check-card .form-check-input {
+            position: absolute;
+            opacity: 0;
+        }
+
+    .card-selectable {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .card-selectable .card {
+            transition: all 0.3s ease;
+        }
+
+    .form-check-input:checked + .card-selectable .card {
+        border-color: #ABE7B2 !important;
+        background-color: rgba(171, 231, 178, 0.1);
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(171, 231, 178, 0.3);
+    }
+
+    .card-selectable:hover .card {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+
+            if (input.files && input.files[0]) {
+                // Validar tamaño (2MB)
+                if (input.files[0].size > 2097152) {
+                    alert('El archivo es demasiado grande. El tamaño máximo es 2MB.');
+                    input.value = '';
+                    return;
+                }
+
+                // Validar tipo
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(input.files[0].type)) {
+                    alert('Formato de imagen no válido. Por favor use JPG, PNG o GIF.');
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

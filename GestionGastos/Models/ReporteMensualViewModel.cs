@@ -4,7 +4,7 @@
     public class ReporteMensualViewModel
     {
         // Modificado para coincidir con el alias "AS Categoria" del SP
-        public string Categoria { get; set; }
+        public required string Categoria { get; set; }
 
         // Modificado para coincidir con el alias "AS Presupuesto" del SP
         public decimal Presupuesto { get; set; }

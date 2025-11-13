@@ -80,5 +80,29 @@ namespace GestionGastos.Repositorios
                 );
             }
         }
+
+        // --- MÉTODO IMPLEMENTADO CON CORRECCIÓN FINAL ---
+        public async Task<IEnumerable<GastoPorCategoriaViewModel>> ObtenerGastosPorCategoria(int idUsuarioPrueba)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Esta consulta suma los gastos por categoría de los últimos 30 días
+                // para el usuario especificado.
+                var query = @"SELECT 
+                                c.nombre AS Categoria, 
+                                SUM(g.monto) AS Monto
+                            FROM 
+                                Gastos g 
+                            INNER JOIN 
+                                Categoria c ON g.id_categoria = c.id_categoria
+                            WHERE 
+                                g.id_usuario = @idUsuarioPrueba
+                                AND g.fechaGasto >= DATEADD(day, -30, GETDATE()) -- CORRECCIÓN APLICADA AQUÍ
+                            GROUP BY 
+                                c.nombre";
+
+                return await connection.QueryAsync<GastoPorCategoriaViewModel>(query, new { idUsuarioPrueba });
+            }
+        }
     }
 }

@@ -7,5 +7,7 @@ namespace GestionGastos.Models
     {
         public SaldoViewModel Saldo { get; set; }
         public IEnumerable<ReporteMensualViewModel> ReporteMensual { get; set; }
+        public IEnumerable<GastoPorCategoriaViewModel> GastosPorCategoria { get; set; }
+
     }
 }

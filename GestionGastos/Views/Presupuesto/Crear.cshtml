@@ -1,0 +1,143 @@
+﻿@model GestionGastos.Models.Presupuesto
+@{
+    ViewData["Title"] = "Crear Presupuesto";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="mb-4">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+            <h2 class="fw-bold">
+                <i class="fas fa-plus-circle me-2" style="color: #93BFC7;"></i>
+                Nuevo Presupuesto
+            </h2>
+            <p class="text-muted">Define un límite de gasto para una categoría específica</p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+                <form asp-action="Crear" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <!-- Categoría -->
+                    <div class="mb-4">
+                        <label asp-for="id_categoria" class="form-label fw-semibold">
+                            <i class="fas fa-tag me-2 text-primary"></i>Categoría de Gasto
+                        </label>
+                        <select asp-for="id_categoria" asp-items="Model.Categorias" class="form-select form-select-lg">
+                            <option value="">-- Seleccione una categoría --</option>
+                        </select>
+                        <span asp-validation-for="id_categoria" class="text-danger"></span>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Solo puedes crear un presupuesto por categoría/mes/año
+                        </small>
+                    </div>
+
+                    <!-- Monto Límite -->
+                    <div class="mb-4">
+                        <label asp-for="montoLimite" class="form-label fw-semibold">
+                            <i class="fas fa-dollar-sign me-2 text-success"></i>Monto Límite
+                        </label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-dollar-sign text-success"></i>
+                            </span>
+                            <input asp-for="montoLimite" type="number" step="0.01" class="form-control"
+                                   placeholder="0.00" />
+                        </div>
+                        <span asp-validation-for="montoLimite" class="text-danger"></span>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-lightbulb me-1"></i>
+                            Este es el máximo que planeas gastar en esta categoría durante el mes
+                        </small>
+                    </div>
+
+                    <!-- Período (Mes y Año) -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-calendar-alt me-2 text-warning"></i>Período
+                        </label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="mes" class="form-label small">Mes</label>
+                                <select asp-for="mes" class="form-select">
+                                    <option value="1">Enero</option>
+                                    <option value="2">Febrero</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Mayo</option>
+                                    <option value="6">Junio</option>
+                                    <option value="7">Julio</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Septiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+                                <span asp-validation-for="mes" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="anio" class="form-label small">Año</label>
+                                <select asp-for="anio" class="form-select">
+                                    @for (int i = 2020; i <= 2030; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="anio" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips -->
+                    <div class="alert alert-info border-0 mb-4">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-lightbulb me-2"></i>Consejos para definir presupuestos
+                        </h6>
+                        <ul class="mb-0 small">
+                            <li>Revisa tus gastos históricos para establecer límites realistas</li>
+                            <li>Considera gastos fijos y variables en cada categoría</li>
+                            <li>Deja un margen para imprevistos (10-15% adicional)</li>
+                            <li>Ajusta tus presupuestos mensualmente según tus necesidades</li>
+                        </ul>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-lg"
+                                style="background: linear-gradient(135deg, #93BFC7 0%, #6b9fa8 100%); color: white; font-weight: 600;">
+                            <i class="fas fa-save me-2"></i>Guardar Presupuesto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Card informativa -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body">
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-chart-pie me-2" style="color: #93BFC7;"></i>
+                    ¿Qué son los presupuestos?
+                </h6>
+                <p class="text-muted mb-0">
+                    Los presupuestos te ayudan a controlar tus gastos estableciendo límites mensuales
+                    por categoría. El sistema te alertará cuando te acerques o excedas estos límites,
+                    permitiéndote tomar mejores decisiones financieras.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

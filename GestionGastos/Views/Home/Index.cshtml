@@ -1,68 +1,382 @@
-﻿@model GestionGastos.Models.SaldoViewModel
+﻿@model GestionGastos.Models.DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
+
+    var etiquetasGrafica = Model.GastosPorCategoria.Select(g => g.Categoria);
+    var montosGrafica = Model.GastosPorCategoria.Select(g => g.Monto);
+    var totalGastos = Model.Saldo.TotalGastos;
 }
 
-@if (Model != null)
+@if (Model != null && Model.Saldo != null)
 {
-    <div class="text-center">
-        <h1 class="display-4">¡Bienvenido, @Model.Usuario!</h1>
-        <p>Este es tu resumen financiero.</p>
+    <!-- Hero Section Mejorado -->
+    <div class="position-relative mb-5 overflow-hidden rounded-4 shadow-lg" style="height: 280px;">
+        <img src="https://www.cetys.mx/educon/wp-content/uploads/2021/04/1500x844_decidir_finanzas_empresa.jpg"
+             alt="Financial Background"
+             class="position-absolute top-0 start-0 w-100 h-100"
+             style="object-fit: cover; object-position: center; filter: brightness(0.5);">
+
+        <div class="position-relative h-100 d-flex flex-column justify-content-center align-items-center text-white px-3">
+            <h1 class="display-3 fw-bold mb-2 text-white" style="text-shadow: 2px 2px 12px rgba(0,0,0,0.5);">
+                <i class="fas fa-chart-line me-3"></i>Dashboard Financiero
+            </h1>
+            <p class="fs-4 mb-2 text-white" style="text-shadow: 1px 1px 6px rgba(0,0,0,0.5);">
+                Bienvenido, <span class="fw-bold" style="color: #ABE7B2;">@Model.Saldo.Usuario</span>
+            </p>
+            <p class="fs-6 opacity-90 text-white">Control total de tus finanzas personales</p>
+        </div>
     </div>
 
-    <hr />
-
-    <div class="row text-center">
-
-        <div class="col-md-12 mb-4">
-            <div class="card border-success shadow-lg">
-                <div class="card-header bg-success text-white">
-                    <h2>Saldo Actual Total</h2>
-                </div>
-                <div class="card-body">
-                    <h1 class="display-3">@Model.SaldoActual.ToString("C")</h1>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card border-primary shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5>Total Ingresos</h5>
-                </div>
-                <div class="card-body">
-                    <h3 class="text-primary">@Model.TotalIngresos.ToString("C")</h3>
+    <!-- Tarjetas de Resumen Mejoradas -->
+    <div class="row mb-5 g-4">
+        <!-- Saldo Actual -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #ABE7B2 0%, #93BFC7 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <p class="mb-1 opacity-90" style="font-size: 0.875rem;">SALDO ACTUAL</p>
+                            <h2 class="mb-0 fw-bold">@Model.Saldo.SaldoActual.ToString("C")</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-wallet fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-arrow-up me-2"></i>
+                        <small>Balance total disponible</small>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card border-danger shadow-sm">
-                <div class="card-header bg-danger text-white">
-                    <h5>Total Gastos</h5>
-                </div>
-                <div class="card-body">
-                    <h3 class="text-danger">@Model.TotalGastos.ToString("C")</h3>
+        <!-- Total Ingresos -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <p class="mb-1 opacity-90" style="font-size: 0.875rem;">INGRESOS</p>
+                            <h2 class="mb-0 fw-bold">@Model.Saldo.TotalIngresos.ToString("C")</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-arrow-trend-up fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-circle me-2" style="font-size: 0.5rem;"></i>
+                        <small>Total de entradas</small>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card border-secondary shadow-sm">
-                <div class="card-header">
-                    <h5>Saldo Inicial</h5>
-                </div>
-                <div class="card-body">
-                    <h3 class="text-secondary">@Model.SaldoInicial.ToString("C")</h3>
+        <!-- Total Gastos -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #ff7849 0%, #E74C3C 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <p class="mb-1 opacity-90" style="font-size: 0.875rem;">GASTOS</p>
+                            <h2 class="mb-0 fw-bold">@Model.Saldo.TotalGastos.ToString("C")</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-arrow-trend-down fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-circle me-2" style="font-size: 0.5rem;"></i>
+                        <small>Total de salidas</small>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Saldo Inicial -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <p class="mb-1 opacity-90" style="font-size: 0.875rem;">SALDO INICIAL</p>
+                            <h2 class="mb-0 fw-bold">@Model.Saldo.SaldoInicial.ToString("C")</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-coins fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-circle me-2" style="font-size: 0.5rem;"></i>
+                        <small>Capital de inicio</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfica de Gastos Mejorada -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="card-title mb-1 fw-bold">Estructura de Gastos</h4>
+                            <p class="text-muted mb-0">Últimos 30 días</p>
+                        </div>
+                        <div class="badge" style="background: linear-gradient(135deg, #ABE7B2 0%, #93BFC7 100%); padding: 0.75rem 1.25rem; font-size: 1rem;">
+                            <i class="fas fa-calendar-alt me-2"></i>Mensual
+                        </div>
+                    </div>
+
+                    <div style="position: relative; height: 350px;">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+
+                    <div id="chartLegend" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Resumen Rápido -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-lg h-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-4">
+                        <i class="fas fa-chart-pie me-2" style="color: #ABE7B2;"></i>
+                        Resumen Rápido
+                    </h5>
+
+                    <!-- Balance -->
+                    <div class="mb-4 pb-4 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Balance Mensual</span>
+                            @{
+                                var balance = Model.Saldo.TotalIngresos - Model.Saldo.TotalGastos;
+                                var balanceClass = balance >= 0 ? "text-success" : "text-danger";
+                                var balanceIcon = balance >= 0 ? "fa-arrow-up" : "fa-arrow-down";
+                            }
+                            <span class="@balanceClass fw-bold">
+                                <i class="fas @balanceIcon me-1"></i>
+                                @balance.ToString("C")
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            @{
+                                var porcentajeGasto = Model.Saldo.TotalIngresos > 0
+                                ? (Model.Saldo.TotalGastos / Model.Saldo.TotalIngresos * 100)
+                                : 0;
+                                var progressColor = porcentajeGasto <= 50 ? "#4ade80" :
+                                porcentajeGasto <= 80 ? "#fbbf24" : "#ef4444";
+                            }
+                            <div class="progress-bar" role="progressbar"
+                                 style="width: @(porcentajeGasto)%; background-color: @progressColor;"
+                                 aria-valuenow="@porcentajeGasto" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <small class="text-muted">@porcentajeGasto.ToString("F1")% del ingreso gastado</small>
+                    </div>
+
+                    <!-- Estadísticas -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle p-2 me-3" style="background: rgba(171, 231, 178, 0.2); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-list text-success"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Categorías activas</small>
+                                <strong>@Model.GastosPorCategoria.Count()</strong>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle p-2 me-3" style="background: rgba(255, 120, 73, 0.2); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-receipt text-danger"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Gasto promedio</small>
+                                @{
+                                    var gastoPromedio = Model.GastosPorCategoria.Count() > 0
+                                    ? Model.Saldo.TotalGastos / Model.GastosPorCategoria.Count()
+                                    : 0;
+                                }
+                                <strong>@gastoPromedio.ToString("C")</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de acción -->
+                    <a asp-controller="Gastos" asp-action="Crear" class="btn w-100 mt-3"
+                       style="background: linear-gradient(135deg, #ABE7B2 0%, #93BFC7 100%); color: white; font-weight: 600;">
+                        <i class="fas fa-plus me-2"></i>Registrar Nuevo Gasto
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos Rápidos -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="fw-bold mb-3">
+                <i class="fas fa-bolt me-2" style="color: #D4AF37;"></i>
+                Accesos Rápidos
+            </h5>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Home" asp-action="ReporteMensual" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="rounded-circle mx-auto mb-3"
+                             style="width: 60px; height: 60px; background: linear-gradient(135deg, #93BFC7 0%, #6b9fa8 100%); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-file-invoice fa-2x text-white"></i>
+                        </div>
+                        <h6 class="fw-bold">Reporte Mensual</h6>
+                        <small class="text-muted">Ver análisis detallado</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Presupuesto" asp-action="Verificar" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="rounded-circle mx-auto mb-3"
+                             style="width: 60px; height: 60px; background: linear-gradient(135deg, #ABE7B2 0%, #7dd88d 100%); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-calculator fa-2x text-white"></i>
+                        </div>
+                        <h6 class="fw-bold">Presupuestos</h6>
+                        <small class="text-muted">Verificar estado</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="rounded-circle mx-auto mb-3"
+                             style="width: 60px; height: 60px; background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-tags fa-2x text-white"></i>
+                        </div>
+                        <h6 class="fw-bold">Categorías</h6>
+                        <small class="text-muted">Gestionar categorías</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="rounded-circle mx-auto mb-3"
+                             style="width: 60px; height: 60px; background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-coins fa-2x text-white"></i>
+                        </div>
+                        <h6 class="fw-bold">Ingresos</h6>
+                        <small class="text-muted">Registrar ingresos</small>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 }
 else
 {
     <div class="alert alert-warning" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
         No se pudo cargar la información del saldo para el usuario.
     </div>
+}
+
+<style>
+    .hover-lift {
+        transition: all 0.3s ease;
+    }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const etiquetas = @Html.Raw(Json.Serialize(etiquetasGrafica));
+        const montos = @Html.Raw(Json.Serialize(montosGrafica));
+        const totalGastos = @totalGastos;
+
+        const dynamicColors = () => {
+            const colors = [
+                '#FF5252', '#FF9800', '#2196F3', '#4CAF50',
+                '#9C27B0', '#E91E63', '#00BCD4', '#FFC107',
+                '#8BC34A', '#3F51B5', '#FF7043', '#795548'
+            ];
+            return etiquetas.map((_, i) => colors[i % colors.length]);
+        };
+
+        const expenseData = {
+            labels: etiquetas,
+            datasets: [{
+                data: montos,
+                backgroundColor: dynamicColors(),
+                borderWidth: 2,
+                borderColor: '#fff',
+                hoverBorderWidth: 3
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: expenseData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) label += ': ';
+                                label += new Intl.NumberFormat('es-MX', {
+                                    style: 'currency',
+                                    currency: 'MXN'
+                                }).format(context.parsed);
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                label += ` (${percentage}%)`;
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        new Chart(ctx, config);
+
+        const legendHtml = expenseData.labels.map((label, index) => {
+            const value = expenseData.datasets[0].data[index];
+            const color = expenseData.datasets[0].backgroundColor[index];
+            const percentage = totalGastos > 0 ? ((value / totalGastos) * 100).toFixed(1) : 0;
+
+            return `
+                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <div style="width: 20px; height: 20px; background-color: ${color}; border-radius: 4px; margin-right: 12px;"></div>
+                        <span class="fw-semibold">${label}</span>
+                    </div>
+                    <div class="text-end">
+                        <strong>${new Intl.NumberFormat('es-MX', {style: 'currency', currency: 'MXN'}).format(value)}</strong>
+                        <span class="text-muted ms-2 small">(${percentage}%)</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('chartLegend').innerHTML = legendHtml;
+    </script>
 }

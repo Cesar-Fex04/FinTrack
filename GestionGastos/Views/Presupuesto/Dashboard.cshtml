@@ -1,0 +1,250 @@
+﻿@model IEnumerable<GestionGastos.Models.Presupuesto>
+@{
+    ViewData["Title"] = "Dashboard de Presupuestos";
+    var mesActual = ViewBag.MesActual;
+    var anioActual = ViewBag.AnioActual;
+    var nombreMes = ViewBag.NombreMesActual;
+}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1 fw-bold">
+            <i class="fas fa-chart-bar me-2" style="color: #93BFC7;"></i>
+            Dashboard de Presupuestos
+        </h2>
+        <p class="text-muted mb-0">Monitorea el estado de tus presupuestos - @nombreMes @anioActual</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-list me-2"></i>Ver Todos
+    </a>
+</div>
+
+<!-- Selector de Período -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Dashboard" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Mes</label>
+                <select name="mes" class="form-select">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(i == mesActual)">
+                            @(new System.Globalization.CultureInfo("es-ES").DateTimeFormat.GetMonthName(i))
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Año</label>
+                <select name="anio" class="form-select">
+                    @for (int i = 2020; i <= 2030; i++)
+                    {
+                        <option value="@i" selected="@(i == anioActual)">@i</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-2"></i>Consultar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <!-- Resumen General -->
+    <div class="row mb-4">
+        @{
+            var totalPresupuestado = Model.Sum(p => p.montoLimite);
+            var totalGastado = Model.Sum(p => p.MontoGastado ?? 0);
+            var porcentajeGeneral = totalPresupuestado > 0 ? (totalGastado / totalPresupuestado * 100) : 0;
+            var disponible = totalPresupuestado - totalGastado;
+        }
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted d-block mb-2">PRESUPUESTADO</small>
+                    <h3 class="fw-bold mb-0" style="color: #93BFC7;">@totalPresupuestado.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted d-block mb-2">GASTADO</small>
+                    <h3 class="fw-bold mb-0" style="color: #ff7849;">@totalGastado.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted d-block mb-2">DISPONIBLE</small>
+                    <h3 class="fw-bold mb-0" style="color: @(disponible >= 0 ? "#4ade80" : "#E74C3C");">
+                        @disponible.ToString("C")
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted d-block mb-2">CONSUMIDO</small>
+                    <h3 class="fw-bold mb-0" style="color: @(porcentajeGeneral <= 80 ? "#4ade80" : "#E74C3C");">
+                        @porcentajeGeneral.ToString("F1")%
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Presupuestos -->
+    <div class="row">
+        @foreach (var presupuesto in Model)
+        {
+            var porcentaje = presupuesto.PorcentajeConsumido ?? 0;
+           // var disponible = presupuesto.montoLimite - (presupuesto.MontoGastado ?? 0);
+            var disponiblePresupuesto = presupuesto.montoLimite - (presupuesto.MontoGastado ?? 0);
+
+            string estadoColor;
+            string estadoTexto;
+            string estadoIcono;
+            
+            if (porcentaje >= 100)
+            {
+                estadoColor = "#E74C3C";
+                estadoTexto = "Excedido";
+                estadoIcono = "fa-exclamation-triangle";
+            }
+            else if (porcentaje >= 80)
+            {
+                estadoColor = "#fbbf24";
+                estadoTexto = "Crítico";
+                estadoIcono = "fa-exclamation-circle";
+            }
+            else if (porcentaje >= 50)
+            {
+                estadoColor = "#3b82f6";
+                estadoTexto = "En Progreso";
+                estadoIcono = "fa-info-circle";
+            }
+            else
+            {
+                estadoColor = "#4ade80";
+                estadoTexto = "Óptimo";
+                estadoIcono = "fa-check-circle";
+            }
+
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="fw-bold mb-1">@presupuesto.NombreCategoria</h5>
+                                <small class="text-muted">@nombreMes @anioActual</small>
+                            </div>
+                            <span class="badge" style="background-color: @estadoColor;">
+                                <i class="fas @estadoIcono me-1"></i>@estadoTexto
+                            </span>
+                        </div>
+
+                        <!-- Montos -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Presupuestado</small>
+                                <strong>@presupuesto.montoLimite.ToString("C")</strong>
+                            </div>
+                            <div class="col-6 text-end">
+                                <small class="text-muted d-block">Gastado</small>
+                                <strong style="color: #ff7849;">@presupuesto.MontoGastado?.ToString("C")</strong>
+                            </div>
+                        </div>
+
+                        <!-- Barra de Progreso -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <small class="text-muted">Progreso</small>
+                                <small class="fw-bold" style="color: @estadoColor;">@porcentaje.ToString("F1")%</small>
+                            </div>
+                            <div class="progress" style="height: 12px; background-color: #e9ecef;">
+                                <div class="progress-bar" 
+                                     role="progressbar" 
+                                     style="width: @(Math.Min(porcentaje, 100))%; background-color: @estadoColor;"
+                                     aria-valuenow="@porcentaje" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disponible -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <span class="text-muted">Disponible</span>
+                          <!--  <span class="fw-bold fs-5" style="color: @(disponible >= 0 ? "#4ade80" : "#E74C3C");">
+                                @disponible.ToString("C")
+                            </span> -->
+
+
+                            <span class="fw-bold fs-5" style="color: @(disponiblePresupuesto >= 0 ? "#4ade80" : "#E74C3C");">
+@disponiblePresupuesto.ToString("C")
+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Alertas -->
+    //@{
+        var presupuestosExcedidos = Model.Where(p => p.PorcentajeConsumido >= 100).ToList();
+        var presupuestosCriticos = Model.Where(p => p.PorcentajeConsumido >= 80 && p.PorcentajeConsumido < 100).ToList();
+   // }
+
+    @if (presupuestosExcedidos.Any())
+    {
+        <div class="alert alert-danger border-0 shadow-sm">
+            <h6 class="alert-heading">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                ¡Presupuestos Excedidos!
+            </h6>
+            <p class="mb-0">
+                Las siguientes categorías han excedido su presupuesto: 
+                <strong>@string.Join(", ", presupuestosExcedidos.Select(p => p.NombreCategoria))</strong>
+            </p>
+        </div>
+    }
+
+    @if (presupuestosCriticos.Any())
+    {
+        <div class="alert alert-warning border-0 shadow-sm">
+            <h6 class="alert-heading">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Presupuestos en Estado Crítico
+            </h6>
+            <p class="mb-0">
+                Las siguientes categorías han consumido más del 80% de su presupuesto: 
+                <strong>@string.Join(", ", presupuestosCriticos.Select(p => p.NombreCategoria))</strong>
+            </p>
+        </div>
+    }
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">No hay presupuestos para este período</h4>
+        <p class="text-muted mb-4">Crea presupuestos para @nombreMes @anioActual</p>
+        <a asp-action="Crear" class="btn btn-primary btn-lg">
+            <i class="fas fa-plus me-2"></i>Crear Presupuesto
+        </a>
+    </div>
+}

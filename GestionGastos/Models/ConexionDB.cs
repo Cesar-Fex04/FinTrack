@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Data.SqlClient;
 using Microsoft.Data.SqlClient;
 
 namespace GestionGastos.Models
 {
     public class ConexionDB
     {
-        // Cadena de conexión configurada para tu laptop
-        private string cadenaConexion = @"Data Source=LAPTOP-NVUR2PBQ\SQLEXPRESS;Initial Catalog=control_gastos;Integrated Security=True";
+        private string cadenaConexion = @"Server=localhost,1433;Database=ControlGastos;User Id=sa;Password=Allisonnc14!;TrustServerCertificate=True;";
 
         private SqlConnection conexion;
 
@@ -16,7 +14,6 @@ namespace GestionGastos.Models
             conexion = new SqlConnection(cadenaConexion);
         }
 
-        // Método para probar la conexión
         public bool ProbarConexion()
         {
             try
@@ -31,13 +28,11 @@ namespace GestionGastos.Models
             }
         }
 
-        // Método para obtener la conexión
         public SqlConnection ObtenerConexion()
         {
             return conexion;
         }
 
-        // Método para abrir conexión
         public void Abrir()
         {
             if (conexion.State == System.Data.ConnectionState.Closed)
@@ -46,7 +41,6 @@ namespace GestionGastos.Models
             }
         }
 
-        // Método para cerrar conexión
         public void Cerrar()
         {
             if (conexion.State == System.Data.ConnectionState.Open)

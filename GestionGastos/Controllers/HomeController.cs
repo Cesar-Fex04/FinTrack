@@ -17,7 +17,6 @@ namespace GestionGastos.Controllers
         }
 
         // --- ACCIÓN INDEX MODIFICADA ---
-        // Devuelve 'SaldoViewModel' para que coincida con tu vista Index.cshtml
         public async Task<IActionResult> Index()
         {
             // TODO: Debes obtener el ID del usuario que ha iniciado sesión
@@ -26,17 +25,25 @@ namespace GestionGastos.Controllers
             // 1. Obtenemos el Saldo (Usando tu SP 'CalcularSaldoActual')
             var modeloSaldo = await _repositorioReportes.ObtenerSaldoActual(idUsuarioPrueba);
 
-            // 2. Pasamos el modelo 'SaldoViewModel' directamente a la vista
-            return View(modeloSaldo);
+            // 2. Obtenemos los Gastos por Categoría (últimos 30 días)
+            var gastosPorCategoria = await _repositorioReportes.ObtenerGastosPorCategoria(idUsuarioPrueba);
+
+            // 3. Creamos el DashboardViewModel con ambos datos
+            var dashboardViewModel = new DashboardViewModel
+            {
+                Saldo = modeloSaldo,
+                GastosPorCategoria = gastosPorCategoria
+            };
+
+            // 4. Pasamos el DashboardViewModel a la vista
+            return View(dashboardViewModel);
         }
 
         // --- ACCIÓN NUEVA PARA LA PÁGINA DEL REPORTE ---
-        // Esta acción es para el nuevo enlace "Reporte" que agregamos
         public async Task<IActionResult> ReporteMensual()
         {
             // TODO: Debes obtener el ID del usuario que ha iniciado sesión
             int idUsuarioPrueba = 1;
-
             // TODO: Debes obtener el Mes/Año del usuario, por ahora usamos los de prueba
             int mesPrueba = 10;
             int anioPrueba = 2025;
