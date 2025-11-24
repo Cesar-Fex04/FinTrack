@@ -1,0 +1,190 @@
+﻿@model IEnumerable<GestionGastos.Models.Ingreso>
+@{
+    ViewData["Title"] = "Mis Ingresos";
+}
+
+<!-- Mensajes -->
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1 fw-bold">
+            <i class="fas fa-coins me-2" style="color: #4ade80;"></i>
+            Mis Ingresos
+        </h2>
+        <p class="text-muted mb-0">Administra todas tus fuentes de ingreso</p>
+    </div>
+    <a asp-action="Crear" class="btn btn-lg shadow-sm"
+       style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white; font-weight: 600;">
+        <i class="fas fa-plus me-2"></i>Nuevo Ingreso
+    </a>
+</div>
+
+<!-- Estadísticas -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">
+            <div class="card-body text-white">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <small class="opacity-90 d-block mb-1">TOTAL DE INGRESOS</small>
+                        <h3 class="fw-bold mb-0">@Model.Sum(i => i.monto).ToString("C")</h3>
+                    </div>
+                    <div class="rounded-circle p-3" style="background: rgba(255,255,255,0.2);">
+                        <i class="fas fa-arrow-up fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(74, 222, 128, 0.2);">
+                        <i class="fas fa-list fa-2x" style="color: #4ade80;"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">@Model.Count()</h5>
+                        <small class="text-muted">Registros Totales</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(212, 175, 55, 0.2);">
+                        <i class="fas fa-chart-line fa-2x" style="color: #D4AF37;"></i>
+                    </div>
+                    <div>
+                        @{
+                            var promedioIngreso = Model.Any() ? Model.Average(i => i.monto) : 0;
+                        }
+                        <h5 class="mb-0 fw-bold">@promedioIngreso.ToString("C")</h5>
+                        <small class="text-muted">Promedio</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de Ingresos -->
+@if (Model != null && Model.Any())
+{
+    <div class="card border-0 shadow-lg">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white;">
+                        <tr>
+                            <th class="px-4 py-3">Fecha</th>
+                            <th class="px-4 py-3">Categoría</th>
+                            <th class="px-4 py-3">Descripción</th>
+                            <th class="px-4 py-3 text-end">Monto</th>
+                            <th class="px-4 py-3 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle me-3"
+                                             style="width: 40px; height: 40px; background: rgba(74, 222, 128, 0.2); display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-calendar text-success"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">@item.fechaIngreso.ToString("dd/MM/yyyy")</div>
+                                            <small class="text-muted">@item.fechaIngreso.ToString("dddd", new System.Globalization.CultureInfo("es-ES"))</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="badge bg-success" style="font-size: 0.875rem; padding: 0.5rem 0.75rem;">
+                                        <i class="fas fa-tag me-1"></i>
+                                        @(item.NombreCategoria ?? "Sin categoría")
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    @if (!string.IsNullOrEmpty(item.descripcion))
+                                    {
+                                        <span>@item.descripcion</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Sin descripción</span>
+                                    }
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <span class="fw-bold fs-5" style="color: #22c55e;">
+                                        + @item.monto.ToString("C")
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Editar" asp-route-id="@item.id_ingreso"
+                                           class="btn btn-sm btn-outline-primary"
+                                           title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Eliminar" asp-route-id="@item.id_ingreso"
+                                           class="btn btn-sm btn-outline-danger"
+                                           title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot style="background-color: #f8fafc;">
+                        <tr>
+                            <td colspan="3" class="px-4 py-3 fw-bold text-end">TOTAL:</td>
+                            <td class="px-4 py-3 text-end">
+                                <span class="fw-bold fs-4" style="color: #22c55e;">
+                                    @Model.Sum(i => i.monto).ToString("C")
+                                </span>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-coins fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">No hay ingresos registrados</h4>
+        <p class="text-muted mb-4">Comienza registrando tus fuentes de ingreso</p>
+        <a asp-action="Crear" class="btn btn-success btn-lg">
+            <i class="fas fa-plus me-2"></i>Registrar Primer Ingreso
+        </a>
+    </div>
+}

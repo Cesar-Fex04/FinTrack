@@ -1,0 +1,50 @@
+﻿@model GestionGastos.Models.Ingreso
+@{
+    ViewData["Title"] = "Eliminar Ingreso";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="mb-4 text-center">
+            <h2 class="fw-bold text-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Confirmar Eliminación
+            </h2>
+            <p class="text-muted">¿Está seguro que desea eliminar el siguiente ingreso? Esta acción es irreversible.</p>
+        </div>
+
+        <div class="card border-danger shadow-lg mb-4">
+            <div class="card-header bg-danger text-white fw-bold">
+                Detalles del Ingreso
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-end text-muted">Monto:</dt>
+                    <dd class="col-sm-8 fw-bold fs-4 text-danger">@Model.monto.ToString("C")</dd>
+
+                    <dt class="col-sm-4 text-end text-muted">Categoría:</dt>
+                    <dd class="col-sm-8">@Model.NombreCategoria</dd>
+
+                    <dt class="col-sm-4 text-end text-muted">Fecha:</dt>
+                    <dd class="col-sm-8">@Model.fechaIngreso.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4 text-end text-muted">Descripción:</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.descripcion) ? "Sin descripción" : Model.descripcion)</dd>
+                </dl>
+            </div>
+        </div>
+
+        <form asp-action="Eliminar" method="post" class="text-center">
+            <input type="hidden" asp-for="id_ingreso" />
+
+            <div class="d-flex gap-3 justify-content-center">
+                <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                <button type="submit" class="btn btn-lg btn-danger">
+                    <i class="fas fa-trash me-2"></i>Eliminar Ingreso
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

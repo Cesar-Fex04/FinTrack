@@ -10,6 +10,8 @@ builder.Services.AddTransient<IRepositorioGastos, RepositorioGastos>();
 builder.Services.AddTransient<IRepositorioReportes, RepositorioReportes>();
 builder.Services.AddTransient<IRepositorioCategorias, RepositorioCategorias>();
 builder.Services.AddTransient<IRepositorioPresupuestos, RepositorioPresupuestos>(); // NUEVO
+builder.Services.AddTransient<IRepositorioIngresos, RepositorioIngresos>(); // NUEVO
+
 
 var app = builder.Build();
 

@@ -50,5 +50,19 @@ namespace GestionGastos.Repositorios
                 // ---- FIN DE LA CORRECCIÓN ----
             }
         }
+        public async Task<IEnumerable<Gasto>> ObtenerPorMesAnio(int idUsuario, int mes, int anio)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var sql = @"SELECT * FROM Gastos 
+                           WHERE id_usuario = @idUsuario
+                               AND MONTH(fechaGasto) = @mes
+                               AND YEAR(fechaGasto) = @anio
+                           ORDER BY fechaGasto DESC";
+
+                return await connection.QueryAsync<Gasto>(sql, new { idUsuario, mes, anio });
+            }
+        }
+
     }
 }

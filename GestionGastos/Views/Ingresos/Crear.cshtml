@@ -1,0 +1,123 @@
+﻿@model GestionGastos.Models.Ingreso
+@{
+    ViewData["Title"] = "Registrar Ingreso";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="mb-4">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+            <h2 class="fw-bold">
+                <i class="fas fa-plus-circle me-2" style="color: #4ade80;"></i>
+                Registrar Nuevo Ingreso
+            </h2>
+            <p class="text-muted">Registra tus entradas de dinero para un mejor control financiero</p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+                <form asp-action="Crear" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <!-- Categoría -->
+                    <div class="mb-4">
+                        <label asp-for="id_categoria" class="form-label fw-semibold">
+                            <i class="fas fa-tag me-2 text-success"></i>Categoría de Ingreso
+                        </label>
+                        <select asp-for="id_categoria" asp-items="Model.Categorias" class="form-select form-select-lg">
+                            <option value="">-- Seleccione una categoría --</option>
+                        </select>
+                        <span asp-validation-for="id_categoria" class="text-danger"></span>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Selecciona el tipo de ingreso (Salario, Freelance, Inversiones, etc.)
+                        </small>
+                    </div>
+
+                    <!-- Monto -->
+                    <div class="mb-4">
+                        <label asp-for="monto" class="form-label fw-semibold">
+                            <i class="fas fa-dollar-sign me-2 text-success"></i>Monto del Ingreso
+                        </label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white; border: none;">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
+                            <input asp-for="monto" type="number" step="0.01" class="form-control"
+                                   placeholder="0.00" style="font-size: 1.5rem; font-weight: 600;" />
+                        </div>
+                        <span asp-validation-for="monto" class="text-danger"></span>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="mb-4">
+                        <label asp-for="descripcion" class="form-label fw-semibold">
+                            <i class="fas fa-align-left me-2 text-primary"></i>Descripción (Opcional)
+                        </label>
+                        <textarea asp-for="descripcion" class="form-control" rows="3"
+                                  placeholder="Ej: Pago de nómina quincena 1, Proyecto freelance cliente X..."></textarea>
+                        <span asp-validation-for="descripcion" class="text-danger"></span>
+                    </div>
+
+                    <!-- Fecha -->
+                    <div class="mb-4">
+                        <label asp-for="fechaIngreso" class="form-label fw-semibold">
+                            <i class="fas fa-calendar-alt me-2 text-warning"></i>Fecha de Ingreso
+                        </label>
+                        <input asp-for="fechaIngreso" type="date" class="form-control form-control-lg" />
+                        <span asp-validation-for="fechaIngreso" class="text-danger"></span>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-lightbulb me-1"></i>
+                            Fecha en que recibiste este ingreso
+                        </small>
+                    </div>
+
+                    <!-- Tips de Ingresos -->
+                    <div class="card border-0 mb-4" style="background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%);">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-lightbulb me-2" style="color: #4ade80;"></i>
+                                Tipos comunes de ingresos
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="small mb-0">
+                                        <li>💼 Salario/Nómina</li>
+                                        <li>💻 Freelance/Trabajos extra</li>
+                                        <li>📈 Inversiones/Dividendos</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="small mb-0">
+                                        <li>🏠 Rentas/Alquileres</li>
+                                        <li>🎁 Regalos/Bonos</li>
+                                        <li>💰 Reembolsos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-lg"
+                                style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white; font-weight: 600;">
+                            <i class="fas fa-save me-2"></i>Registrar Ingreso
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

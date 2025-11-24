@@ -1,0 +1,335 @@
+﻿@model GestionGastos.Models.AnalisisFinancieroViewModel
+@{
+    ViewData["Title"] = "Análisis Financiero";
+
+    var etiquetasComparativa = Model.ComparativaMensual.Select(c => c.Mes);
+    var ingresosComparativa = Model.ComparativaMensual.Select(c => c.Ingresos);
+    var gastosComparativa = Model.ComparativaMensual.Select(c => c.Gastos);
+}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1 fw-bold">
+            <i class="fas fa-chart-line me-2" style="color: #D4AF37;"></i>
+            Análisis Financiero
+        </h2>
+        <p class="text-muted mb-0">Comparativa de Ingresos vs Gastos - @Model.NombreMes @Model.Anio</p>
+    </div>
+</div>
+
+<!-- Selector de Período -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Analisis" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Mes</label>
+                <select name="mes" class="form-select">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(i == Model.Mes)">
+                            @(new System.Globalization.CultureInfo("es-ES").DateTimeFormat.GetMonthName(i))
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Año</label>
+                <select name="anio" class="form-select">
+                    @for (int i = 2020; i <= 2030; i++)
+                    {
+                        <option value="@i" selected="@(i == Model.Anio)">@i</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-2"></i>Consultar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Resumen del Mes -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">
+            <div class="card-body text-white p-4">
+                <small class="opacity-90 d-block mb-2">INGRESOS</small>
+                <h2 class="fw-bold mb-0">@Model.TotalIngresos.ToString("C")</h2>
+                <div class="mt-3">
+                    <i class="fas fa-arrow-up fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #ff7849 0%, #E74C3C 100%);">
+            <div class="card-body text-white p-4">
+                <small class="opacity-90 d-block mb-2">GASTOS</small>
+                <h2 class="fw-bold mb-0">@Model.TotalGastos.ToString("C")</h2>
+                <div class="mt-3">
+                    <i class="fas fa-arrow-down fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, @(Model.Balance >= 0 ? "#93BFC7" : "#E74C3C") 0%, @(Model.Balance >= 0 ? "#6b9fa8" : "#c0392b") 100%);">
+            <div class="card-body text-white p-4">
+                <small class="opacity-90 d-block mb-2">BALANCE</small>
+                <h2 class="fw-bold mb-0">@Model.Balance.ToString("C")</h2>
+                <div class="mt-3">
+                    <i class="fas @(Model.Balance >= 0 ? "fa-check-circle" : "fa-exclamation-triangle") fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);">
+            <div class="card-body text-white p-4">
+                <small class="opacity-90 d-block mb-2">TASA DE AHORRO</small>
+                <h2 class="fw-bold mb-0">@Model.TasaAhorro.ToString("F1")%</h2>
+                <div class="mt-3">
+                    <i class="fas fa-piggy-bank fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfica Comparativa -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="fas fa-chart-bar me-2" style="color: #93BFC7;"></i>
+                    Comparativa Últimos 6 Meses
+                </h5>
+                <div style="position: relative; height: 400px;">
+                    <canvas id="comparativaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Distribución por Categorías -->
+<div class="row">
+    <!-- Ingresos por Categoría -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="fas fa-arrow-up me-2" style="color: #4ade80;"></i>
+                    Ingresos por Categoría
+                </h5>
+                @if (Model.IngresosPorCategoria != null && Model.IngresosPorCategoria.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <tbody>
+                                @foreach (var ingreso in Model.IngresosPorCategoria)
+                                {
+                                    var porcentaje = Model.TotalIngresos > 0 ? (ingreso.Monto / Model.TotalIngresos * 100) : 0;
+                                    <tr>
+                                        <td class="fw-semibold">@ingreso.Categoria</td>
+                                        <td class="text-end">
+                                            <span class="fw-bold" style="color: #22c55e;">@ingreso.Monto.ToString("C")</span>
+                                            <small class="text-muted ms-2">(@porcentaje.ToString("F1")%)</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="py-2">
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success"
+                                                     style="width: @porcentaje%"
+                                                     role="progressbar"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center py-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No hay ingresos registrados en este período
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Gastos por Categoría -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="fas fa-arrow-down me-2" style="color: #ff7849;"></i>
+                    Gastos por Categoría
+                </h5>
+                @if (Model.GastosPorCategoria != null && Model.GastosPorCategoria.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <tbody>
+                                @foreach (var gasto in Model.GastosPorCategoria)
+                                {
+                                    var porcentaje = Model.TotalGastos > 0 ? (gasto.Monto / Model.TotalGastos * 100) : 0;
+                                    <tr>
+                                        <td class="fw-semibold">@gasto.Categoria</td>
+                                        <td class="text-end">
+                                            <span class="fw-bold" style="color: #E74C3C;">@gasto.Monto.ToString("C")</span>
+                                            <small class="text-muted ms-2">(@porcentaje.ToString("F1")%)</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="py-2">
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar"
+                                                     style="width: @porcentaje%; background-color: #ff7849;"
+                                                     role="progressbar"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center py-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No hay gastos registrados en este período
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Indicadores de Salud Financiera -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-4">
+            <i class="fas fa-heart-pulse me-2" style="color: #D4AF37;"></i>
+            Indicadores de Salud Financiera
+        </h5>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(74, 222, 128, 0.2);">
+                        <i class="fas fa-percentage" style="color: #4ade80;"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Tasa de Ahorro</small>
+                        <strong>@Model.TasaAhorro.ToString("F1")%</strong>
+                        @if (Model.TasaAhorro >= 20)
+                        {
+                            <span class="badge bg-success ms-2">Excelente</span>
+                        }
+                        else if (Model.TasaAhorro >= 10)
+                        {
+                            <span class="badge bg-warning ms-2">Bueno</span>
+                        }
+                        else if (Model.TasaAhorro >= 0)
+                        {
+                            <span class="badge bg-info ms-2">Bajo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger ms-2">Déficit</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle p-3 me-3" style="background: rgba(147, 191, 199, 0.2);">
+                        <i class="fas fa-balance-scale" style="color: #93BFC7;"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Balance del Mes</small>
+                        <strong style="color: @(Model.Balance >= 0 ? "#4ade80" : "#E74C3C");">
+                            @Model.Balance.ToString("C")
+                        </strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const etiquetas = @Html.Raw(Json.Serialize(etiquetasComparativa));
+        const ingresos = @Html.Raw(Json.Serialize(ingresosComparativa));
+        const gastos = @Html.Raw(Json.Serialize(gastosComparativa));
+
+        const ctx = document.getElementById('comparativaChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: etiquetas,
+                datasets: [
+                    {
+                        label: 'Ingresos',
+                        data: ingresos,
+                        backgroundColor: 'rgba(74, 222, 128, 0.8)',
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Gastos',
+                        data: gastos,
+                        backgroundColor: 'rgba(255, 120, 73, 0.8)',
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' +
+                                    new Intl.NumberFormat('es-MX', {
+                                        style: 'currency',
+                                        currency: 'MXN'
+                                    }).format(context.parsed.y);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString('es-MX');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

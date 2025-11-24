@@ -1,6 +1,8 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\categorias\23a1f8d1-f2d7-4a8b-9c1f-8b79b8200585.png
+wwwroot\images\categorias\6055c4c0-ab5d-4ee0-bf37-07bbf4e48f71.png
+wwwroot\images\categorias\7a2c834b-356a-4a12-89fd-6a54fc689cb2.png
 wwwroot\images\categorias\c6ecd2aa-06ae-4c8b-8df5-cec4593c954f.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

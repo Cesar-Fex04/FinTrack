@@ -8,5 +8,9 @@ namespace GestionGastos.Repositorios
         Task<IEnumerable<Categoria>> ObtenerCategoriasGasto();
         Task<IEnumerable<tipoMovimiento>> ObtenerTiposMovimiento();
         Task Crear(Gasto gasto);
+
+        // --- Método para obtener gastos por mes y año ---
+
+        Task<IEnumerable<Gasto>> ObtenerPorMesAnio(int idUsuario, int mes, int anio);
     }
 }

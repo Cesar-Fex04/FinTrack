@@ -1,0 +1,100 @@
+﻿@model GestionGastos.Models.Categoria
+@{
+    ViewData["Title"] = "Eliminar Categoría";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="mb-4">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+            <h2 class="fw-bold text-danger">
+                <i class="fas fa-trash-alt me-2"></i>
+                Eliminar Categoría
+            </h2>
+            <p class="text-muted">Estás a punto de eliminar una categoría. Esta acción no se puede deshacer.</p>
+        </div>
+
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+
+                <h3 class="fw-normal mb-3">¿Estás seguro de que deseas eliminar esta categoría?</h3>
+
+                <div class="alert alert-danger-light border-2 border-danger border-dashed p-3">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 fw-semibold">
+                            <i class="fas fa-tag me-2"></i>
+                            Nombre:
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.nombre)
+                        </dd>
+
+                        <dt class="col-sm-4 fw-semibold">
+                            <i class="fas fa-exchange-alt me-2"></i>
+                            Tipo:
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.tipo == "Ingreso")
+                            {
+                                <span class="badge bg-success-light text-success">
+                                    <i class="fas fa-plus-circle me-1"></i> @Html.DisplayFor(model => model.tipo)
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger-light text-danger">
+                                    <i class="fas fa-minus-circle me-1"></i> @Html.DisplayFor(model => model.tipo)
+                                </span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+
+                <form asp-action="Eliminar" method="post" class="mt-4">
+                    @* Este campo oculto es VITAL. Envía el ID al método POST *@
+                    <input type="hidden" asp-for="id_categoria" />
+
+                    <div class="d-flex gap-3 justify-content-end pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-lg btn-danger">
+                            <i class="fas fa-trash-alt me-2"></i>Confirmar Eliminación
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Estilos opcionales para las alertas (puedes ponerlos en tu CSS) *@
+<style>
+    .alert-danger-light {
+        background-color: rgba(255, 120, 73, 0.05);
+        color: #333;
+    }
+
+    .bg-success-light {
+        background-color: rgba(74, 222, 128, 0.1);
+    }
+
+    .text-success {
+        color: #16a34a !important;
+    }
+
+    .bg-danger-light {
+        background-color: rgba(255, 120, 73, 0.1);
+    }
+
+    .text-danger {
+        color: #ff4d4d !important;
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+    }
+</style>
