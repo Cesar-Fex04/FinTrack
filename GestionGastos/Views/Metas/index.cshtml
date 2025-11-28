@@ -1,0 +1,437 @@
+﻿@model GestionGastos.Models.MetasFinancierasViewModel
+@{
+    ViewData["Title"] = "Calculadora de Metas Financieras";
+}
+
+<!-- Header -->
+<div class="mb-4">
+    <h2 class="mb-1 fw-bold">
+        <i class="fas fa-bullseye me-2" style="color: #D4AF37;"></i>
+        Calculadora de Metas Financieras
+    </h2>
+    <p class="text-muted mb-0">Planifica y alcanza tus objetivos financieros con proyecciones precisas</p>
+</div>
+
+<!-- Resumen Financiero Actual -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">
+            <div class="card-body text-white p-3">
+                <small class="opacity-90 d-block mb-1">INGRESO PROMEDIO</small>
+                <h4 class="fw-bold mb-0">@Model.IngresoMensualPromedio.ToString("C")</h4>
+                <small class="opacity-75">Mensual</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #ff7849 0%, #E74C3C 100%);">
+            <div class="card-body text-white p-3">
+                <small class="opacity-90 d-block mb-1">GASTO PROMEDIO</small>
+                <h4 class="fw-bold mb-0">@Model.GastoMensualPromedio.ToString("C")</h4>
+                <small class="opacity-75">Mensual</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #93BFC7 0%, #6b9fa8 100%);">
+            <div class="card-body text-white p-3">
+                <small class="opacity-90 d-block mb-1">AHORRO PROMEDIO</small>
+                <h4 class="fw-bold mb-0">@Model.AhorroMensualPromedio.ToString("C")</h4>
+                <small class="opacity-75">Mensual</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);">
+            <div class="card-body text-white p-3">
+                <small class="opacity-90 d-block mb-1">SALDO ACTUAL</small>
+                <h4 class="fw-bold mb-0">@Model.SaldoActual.ToString("C")</h4>
+                <small class="opacity-75">Disponible</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calculadoras -->
+<div class="row">
+    <!-- Calculadora 1: ¿Cuánto tiempo necesito? -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-lg h-100">
+            <div class="card-header" style="background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%); color: white;">
+                <h5 class="mb-0">
+                    <i class="fas fa-clock me-2"></i>¿En cuánto tiempo alcanzaré mi meta?
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted mb-4">Calcula cuánto tiempo necesitas para alcanzar tu objetivo basado en tu capacidad de ahorro mensual.</p>
+
+                <form id="formTiempoMeta">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">¿Qué quieres comprar?</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                            <input type="text" class="form-control" id="nombreMeta1" placeholder="Ej: Auto, Casa, Viaje...">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Monto de tu meta</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            <input type="number" class="form-control" id="montoMeta1" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">¿Cuánto puedes ahorrar al mes?</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-piggy-bank"></i></span>
+                            <input type="number" class="form-control" id="ahorroMensual1" placeholder="0.00" step="0.01" required
+                                   value="@Model.AhorroMensualPromedio">
+                        </div>
+                        <small class="text-muted">Sugerido basado en tu promedio: @Model.AhorroMensualPromedio.ToString("C")</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Saldo inicial (opcional)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-wallet"></i></span>
+                            <input type="number" class="form-control" id="saldoInicial1" placeholder="0.00" step="0.01"
+                                   value="@Model.SaldoActual">
+                        </div>
+                        <small class="text-muted">Tu saldo actual: @Model.SaldoActual.ToString("C")</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-lg w-100" style="background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%); color: white; font-weight: 600;">
+                        <i class="fas fa-calculator me-2"></i>Calcular Tiempo
+                    </button>
+                </form>
+
+                <div id="resultado1" class="mt-4" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculadora 2: Plan de ahorro personalizado -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-lg h-100">
+            <div class="card-header" style="background: linear-gradient(135deg, #93BFC7 0%, #6b9fa8 100%); color: white;">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Plan de Ahorro Personalizado
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted mb-4">Define tu meta y el plazo. Te diremos cuánto necesitas ahorrar mensualmente.</p>
+
+                <form id="formPlanAhorro">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">¿Qué quieres lograr?</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-star"></i></span>
+                            <input type="text" class="form-control" id="nombreMeta2" placeholder="Describe tu meta...">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Monto objetivo</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            <input type="number" class="form-control" id="montoMeta2" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">¿En cuántos meses?</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="number" class="form-control" id="mesesDisponibles" placeholder="12" min="1" max="360" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Saldo inicial (opcional)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-coins"></i></span>
+                            <input type="number" class="form-control" id="saldoInicial2" placeholder="0.00" step="0.01"
+                                   value="@Model.SaldoActual">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Colchón de seguridad (%)</label>
+                        <input type="range" class="form-range" id="porcentajeExtra" min="0" max="30" value="10"
+                               oninput="document.getElementById('porcentajeExtraValue').textContent = this.value + '%'">
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">0%</small>
+                            <span id="porcentajeExtraValue" class="badge bg-info">10%</span>
+                            <small class="text-muted">30%</small>
+                        </div>
+                        <small class="text-muted d-block mt-1">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Añade un margen extra para imprevistos
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-lg w-100" style="background: linear-gradient(135deg, #93BFC7 0%, #6b9fa8 100%); color: white; font-weight: 600;">
+                        <i class="fas fa-calculator me-2"></i>Generar Plan
+                    </button>
+                </form>
+
+                <div id="resultado2" class="mt-4" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfica de Proyección -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="fas fa-chart-area me-2" style="color: #D4AF37;"></i>
+                    Proyección de Ahorro
+                </h5>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="proyeccionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Gráfica inicial de proyección de ahorro histórico
+        const meses = @Html.Raw(Json.Serialize(Model.ProyeccionAhorro.Select(p => p.Mes)));
+        const ahorros = @Html.Raw(Json.Serialize(Model.ProyeccionAhorro.Select(p => p.AhorroAcumulado)));
+
+        const ctx = document.getElementById('proyeccionChart').getContext('2d');
+        let proyeccionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: meses,
+                datasets: [{
+                    label: 'Ahorro Mensual',
+                    data: ahorros,
+                    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                    borderColor: 'rgba(212, 175, 55, 1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Ahorro: ' + new Intl.NumberFormat('es-MX', {
+                                    style: 'currency',
+                                    currency: 'MXN'
+                                }).format(context.parsed.y);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString('es-MX');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Calculadora 1: Tiempo para meta
+        document.getElementById('formTiempoMeta').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const montoMeta = parseFloat(document.getElementById('montoMeta1').value);
+            const ahorroMensual = parseFloat(document.getElementById('ahorroMensual1').value);
+            const saldoInicial = parseFloat(document.getElementById('saldoInicial1').value) || 0;
+
+            if (!montoMeta || !ahorroMensual) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+
+            try {
+                const response = await fetch('/Metas/CalcularTiempo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ montoMeta, ahorroMensual, saldoInicial })
+                });
+
+                const resultado = await response.json();
+
+                if (resultado.success) {
+                    mostrarResultadoTiempo(resultado.data);
+                } else {
+                    alert('Error al calcular');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al conectar con el servidor');
+            }
+        });
+
+        // Calculadora 2: Plan de ahorro
+        document.getElementById('formPlanAhorro').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const montoMeta = parseFloat(document.getElementById('montoMeta2').value);
+            const mesesDisponibles = parseInt(document.getElementById('mesesDisponibles').value);
+            const saldoInicial = parseFloat(document.getElementById('saldoInicial2').value) || 0;
+            const porcentajeAhorroExtra = parseFloat(document.getElementById('porcentajeExtra').value);
+
+            if (!montoMeta || !mesesDisponibles) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+
+            try {
+                const response = await fetch('/Metas/CalcularPlan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ montoMeta, mesesDisponibles, saldoInicial, porcentajeAhorroExtra })
+                });
+
+                const resultado = await response.json();
+
+                if (resultado.success) {
+                    mostrarResultadoPlan(resultado.data);
+                } else {
+                    alert('Error al calcular');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al conectar con el servidor');
+            }
+        });
+
+        function mostrarResultadoTiempo(data) {
+            const resultado = document.getElementById('resultado1');
+            const nombreMeta = document.getElementById('nombreMeta1').value || 'Tu meta';
+
+            const colorEstado = data.esViable ? '#4ade80' : '#fbbf24';
+            const iconoEstado = data.esViable ? 'fa-check-circle' : 'fa-exclamation-triangle';
+
+            resultado.innerHTML = `
+                <div class="alert border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.1) 100%);">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-flag-checkered me-2" style="color: #D4AF37;"></i>
+                        Resultado: ${nombreMeta}
+                    </h6>
+
+                    <div class="row text-center mb-3">
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0" style="color: #D4AF37;">${data.mesesNecesarios}</h3>
+                            <small class="text-muted">Meses</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0" style="color: #93BFC7;">${data.anios}a ${data.mesesRestantes}m</h3>
+                            <small class="text-muted">Tiempo</small>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0" style="color: ${colorEstado};">
+                                <i class="fas ${iconoEstado}"></i>
+                            </h3>
+                            <small class="text-muted">${data.esViable ? 'Viable' : 'Revisar'}</small>
+                        </div>
+                    </div>
+
+                    <p class="mb-2"><i class="fas fa-calendar-check me-2"></i><strong>Fecha estimada:</strong> ${new Date(data.fechaEstimada).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}</p>
+                    <p class="mb-2"><i class="fas fa-dollar-sign me-2"></i><strong>Total a ahorrar:</strong> ${formatearMoneda(data.totalAhorrar)}</p>
+                    <p class="mb-2"><i class="fas fa-piggy-bank me-2"></i><strong>Ahorro por día:</strong> ${formatearMoneda(data.ahorroPorDia)}</p>
+                    <p class="mb-0"><i class="fas fa-calendar-week me-2"></i><strong>Ahorro por semana:</strong> ${formatearMoneda(data.ahorroPorSemana)}</p>
+
+                    <div class="alert alert-${data.esViable ? 'success' : 'warning'} mt-3 mb-0">
+                        <i class="fas ${iconoEstado} me-2"></i>${data.mensajeViabilidad}
+                    </div>
+                </div>
+            `;
+
+            resultado.style.display = 'block';
+            actualizarGrafica(data.proyeccion);
+        }
+
+        function mostrarResultadoPlan(data) {
+            const resultado = document.getElementById('resultado2');
+            const nombreMeta = document.getElementById('nombreMeta2').value || 'Tu objetivo';
+
+            const colorEstado = data.esRealistaConIngresoActual ? '#4ade80' : '#ff7849';
+
+            resultado.innerHTML = `
+                <div class="alert border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(147, 191, 199, 0.1) 0%, rgba(107, 159, 168, 0.1) 100%);">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-clipboard-check me-2" style="color: #93BFC7;"></i>
+                        Plan para: ${nombreMeta}
+                    </h6>
+
+                    <div class="text-center mb-3 p-3 rounded" style="background: white;">
+                        <small class="text-muted d-block mb-1">NECESITAS AHORRAR</small>
+                        <h2 class="fw-bold mb-0" style="color: #93BFC7;">
+                            ${formatearMoneda(data.ahorroMensualRequerido)}
+                        </h2>
+                        <small class="text-muted">por mes</small>
+                    </div>
+
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <p class="mb-1"><small class="text-muted">Por día</small></p>
+                            <strong>${formatearMoneda(data.ahorroPorDia)}</strong>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-1"><small class="text-muted">Por semana</small></p>
+                            <strong>${formatearMoneda(data.ahorroPorSemana)}</strong>
+                        </div>
+                    </div>
+
+                    <div class="progress mb-2" style="height: 25px;">
+                        <div class="progress-bar" style="width: ${data.porcentajeIngresoNecesario}%; background-color: ${colorEstado};">
+                            ${data.porcentajeIngresoNecesario.toFixed(1)}% de tu ingreso
+                        </div>
+                    </div>
+
+                    <div class="alert alert-${data.esRealistaConIngresoActual ? 'success' : 'warning'} mt-3 mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>${data.recomendacion}
+                    </div>
+                </div>
+            `;
+
+            resultado.style.display = 'block';
+            actualizarGrafica(data.proyeccion);
+        }
+
+        function actualizarGrafica(proyeccion) {
+            const labels = proyeccion.map(p => p.nombreMes);
+            const data = proyeccion.map(p => p.ahorroAcumulado);
+
+            proyeccionChart.data.labels = labels;
+            proyeccionChart.data.datasets[0].data = data;
+            proyeccionChart.data.datasets[0].label = 'Proyección de Ahorro';
+            proyeccionChart.data.datasets[0].borderColor = 'rgba(212, 175, 55, 1)';
+            proyeccionChart.data.datasets[0].backgroundColor = 'rgba(212, 175, 55, 0.2)';
+            proyeccionChart.update();
+        }
+
+        function formatearMoneda(valor) {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            }).format(valor);
+        }
+    </script>
+}

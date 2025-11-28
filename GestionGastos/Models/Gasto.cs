@@ -1,10 +1,12 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace GestionGastos.Models
 {
     public class Gasto
     {
-        // Propiedades que usa el controlador para el INSERT
+        // Propiedades principales
+        public int id_gasto { get; set; }
         public int id_usuario { get; set; }
         public int id_categoria { get; set; }
         public int id_tipoMovimiento { get; set; }
@@ -13,7 +15,8 @@ namespace GestionGastos.Models
         public DateTime fechaGasto { get; set; }
         public string MetodoPago { get; set; }
 
-        // Propiedad Id (aunque no se usa en el 'Crear', es buena práctica)
-        public int id_gasto { get; set; }
+        // Propiedad adicional para mostrar nombre de categoría (NO se mapea a BD)
+        [ValidateNever]
+        public string? NombreCategoria { get; set; }
     }
 }

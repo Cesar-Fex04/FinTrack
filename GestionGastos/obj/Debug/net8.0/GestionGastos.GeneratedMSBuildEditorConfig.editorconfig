@@ -1,11 +1,19 @@
 is_global = true
 build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = GestionGastos
 build_property.RootNamespace = GestionGastos
@@ -40,6 +48,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FzdG9zXENyZWFyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Gastos/Editar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FzdG9zXEVkaXRhci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Gastos/Eliminar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FzdG9zXEVsaW1pbmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Gastos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FzdG9zXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Home/Analisis.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBbmFsaXNpcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -72,6 +92,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5ncmVzb3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Metas/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWV0YXNcaW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Presupuesto/Crear.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlc3VwdWVzdG9cQ3JlYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -82,6 +106,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Presupuesto/Editar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlc3VwdWVzdG9cRWRpdGFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Presupuesto/Eliminar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlc3VwdWVzdG9cRWxpbWluYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/julio/source/repos/GestionGastos/GestionGastos/Views/Presupuesto/Index.cshtml]
