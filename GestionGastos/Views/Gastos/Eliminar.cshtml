@@ -1,0 +1,107 @@
+﻿@model GestionGastos.Models.Gasto
+@{
+    ViewData["Title"] = "Eliminar Gasto";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <!-- Header -->
+        <div class="mb-4">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+            <h2 class="fw-bold text-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Eliminar Gasto
+            </h2>
+            <p class="text-muted">¿Estás seguro de que deseas eliminar este gasto?</p>
+        </div>
+
+        <!-- Card de confirmación -->
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+                <!-- Alerta de advertencia -->
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+                </div>
+
+                <!-- Información del gasto -->
+                <div class="text-center mb-4 p-4 bg-light rounded">
+                    <div class="rounded-circle mx-auto shadow mb-3"
+                         style="width: 100px; height: 100px; background: linear-gradient(135deg, #E74C3C 0%, #c0392b 100%); display: inline-flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-receipt fa-3x text-white"></i>
+                    </div>
+
+                    <h2 class="fw-bold mb-2" style="color: #E74C3C;">
+                        @Model.Monto.ToString("C")
+                    </h2>
+
+                    <span class="badge" style="background-color: #E74C3C; font-size: 0.9rem; padding: 0.5rem 0.75rem;">
+                        <i class="fas fa-tag me-1"></i>
+                        @(Model.NombreCategoria ?? "Sin categoría")
+                    </span>
+
+                    @if (!string.IsNullOrEmpty(Model.Descripcion))
+                    {
+                        <p class="text-muted mt-3 mb-0">@Model.Descripcion</p>
+                    }
+                </div>
+
+                <!-- Detalles -->
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Detalles del gasto:</h6>
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            <tr>
+                                <td class="text-muted" style="width: 40%;">
+                                    <i class="fas fa-calendar me-2"></i>Fecha:
+                                </td>
+                                <td class="fw-semibold">@Model.fechaGasto.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">
+                                    <i class="fas fa-tag me-2"></i>Categoría:
+                                </td>
+                                <td class="fw-semibold">@(Model.NombreCategoria ?? "Sin categoría")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">
+                                    <i class="fas fa-dollar-sign me-2"></i>Monto:
+                                </td>
+                                <td class="fw-semibold" style="color: #E74C3C;">@Model.Monto.ToString("C")</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">
+                                    <i class="fas fa-credit-card me-2"></i>Método de Pago:
+                                </td>
+                                <td class="fw-semibold">@(string.IsNullOrEmpty(Model.MetodoPago) ? "No especificado" : Model.MetodoPago)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">
+                                    <i class="fas fa-align-left me-2"></i>Descripción:
+                                </td>
+                                <td class="fw-semibold">@(string.IsNullOrEmpty(Model.Descripcion) ? "Sin descripción" : Model.Descripcion)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Formulario de confirmación -->
+                <form asp-action="Eliminar" method="post">
+                    <input type="hidden" asp-for="id_gasto" />
+
+                    <div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-lg btn-danger"
+                                onclick="return confirm('¿Estás completamente seguro de eliminar este gasto?');">
+                            <i class="fas fa-trash me-2"></i>Sí, Eliminar Gasto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

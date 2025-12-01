@@ -43,20 +43,25 @@ namespace GestionGastos.Controllers
         }
 
         // --- ACCIÓN REPORTE MENSUAL ---
-        public async Task<IActionResult> ReporteMensual()
+        public async Task<IActionResult> ReporteMensual(int? mes, int? anio)
         {
             int idUsuarioPrueba = 1;
-            int mesPrueba = 10;
-            int anioPrueba = 2025;
+
+            int mesSeleccionado = mes ?? DateTime.Now.Month;
+            int anioSeleccionado = anio ?? DateTime.Now.Year;
 
             var modelo = await _repositorioReportes.ObtenerReporteMensual(
                 idUsuarioPrueba,
-                mesPrueba,
-                anioPrueba
+                mesSeleccionado,
+                anioSeleccionado
             );
+
+            ViewBag.MesSeleccionado = mesSeleccionado;
+            ViewBag.AnioSeleccionado = anioSeleccionado;
 
             return View(modelo);
         }
+
 
         // --- NUEVA ACCIÓN: ANÁLISIS FINANCIERO ---
         public async Task<IActionResult> Analisis(int? mes, int? anio)

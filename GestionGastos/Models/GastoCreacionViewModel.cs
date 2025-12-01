@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation; // <-- ¡ESTE ES VITAL!
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace GestionGastos.Models
 {
@@ -21,22 +21,18 @@ namespace GestionGastos.Models
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una categoría")]
         public int id_categoria { get; set; }
 
-        [Required(ErrorMessage = "Debes seleccionar un tipo")]
-        [Display(Name = "Tipo de Movimiento")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un tipo")]
-        public int id_tipoMovimiento { get; set; }
-
         [Required(ErrorMessage = "El método de pago es obligatorio")]
         [Display(Name = "Método de Pago")]
         public string MetodoPago { get; set; }
 
+        [Display(Name = "Fecha del Gasto")]
+        public DateTime fechaGasto { get; set; } = DateTime.Now;
+
         // --- Listas que NO se validan ---
 
-        [ValidateNever] // <-- Ignora la validación de esta lista
+        [ValidateNever]
         public IEnumerable<SelectListItem> Categorias { get; set; }
 
-        [ValidateNever] // <-- Ignora la validación de esta lista
-        public IEnumerable<SelectListItem> TiposMovimiento { get; set; }
-
+        // NOTA: Ya no necesitamos TiposMovimiento porque siempre será "Gasto"
     }
 }

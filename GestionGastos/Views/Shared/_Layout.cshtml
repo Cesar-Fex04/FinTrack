@@ -28,45 +28,43 @@
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-
-            <a asp-controller="Gastos" asp-action="Crear" class="sidebar-item">
-                <i class="fas fa-minus-circle"></i>
-                <span>Registrar Gasto</span>
-            </a>
-
-            <a asp-controller="Home" asp-action="ReporteMensual" class="sidebar-item">
-                <i class="fas fa-chart-line"></i>
-                <span>Reporte Mensual</span>
-            </a>
-
-          
-            <a asp-controller="Categorias" asp-action="Index" class="sidebar-item">
-                <i class="fas fa-tags"></i>
-                <span>Categorías</span>
-            </a>
-            
-            <a asp-controller="Presupuesto" asp-action="Index" class="sidebar-item">
-                <i class="fas fa-calculator"></i>
-                <span>Verificar Presupuesto</span>
-            </a>
-
             <a asp-controller="Ingresos" asp-action="Index" class="sidebar-item">
                 <i class="fas fa-coins"></i>
                 <span>Ingresos</span>
             </a>
 
-            <!-- Después de Presupuestos, agrega: -->
-            <div class="sidebar-divider"></div>
+            <a asp-controller="Gastos" asp-action="Index" class="sidebar-item">
+                <i class="fas fa-minus-circle"></i>
+                <span>Registrar Gasto</span>
+            </a>
 
-            <div class="sidebar-section-title">
-                <i class="fas fa-chart-line"></i>
-                <span>Análisis</span>
-            </div>
+            <a asp-controller="Categorias" asp-action="Index" class="sidebar-item">
+                <i class="fas fa-tags"></i>
+                <span>Categorías</span>
+            </a>
+
+            <a asp-controller="Presupuesto" asp-action="Index" class="sidebar-item">
+                <i class="fas fa-calculator"></i>
+                <span>Verificar Presupuesto</span>
+            </a>
+            <a asp-controller="Home" asp-action="ReporteMensual" class="sidebar-item">
+                <i class="fas fa-signal"></i>
+                <span>Reporte Mensual</span>
+            </a>
 
             <a asp-controller="Home" asp-action="Analisis" class="sidebar-item">
-                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-chart-area"></i>
                 <span>Análisis Financiero</span>
             </a>
+          
+            <a asp-controller="Metas" asp-action="Index" class="sidebar-item">
+                <i class="fas fa-bullseye"></i>
+                <span>Metas Financieras</span>
+            </a>
+
+         
+
+           
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-section-title">
@@ -74,20 +72,7 @@
                 <span>Configuración</span>
             </div>
 
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-tags"></i>
-                <span>Categorías</span>
-            </a>
-
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-coins"></i>
-                <span>Ingresos</span>
-            </a>
-
-            <a href="#" class="sidebar-item">
-                <i class="fas fa-bullseye"></i>
-                <span>Metas Financieras</span>
-            </a>
+           
         </div>
 
         <div class="sidebar-footer">

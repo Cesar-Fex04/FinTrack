@@ -3,79 +3,108 @@
     ViewData["Title"] = "Editar Presupuesto";
 }
 
-<h2 class="mb-1 fw-bold">
-    <i class="fas fa-edit me-2" style="color: #93BFC7;"></i>
-    Editar Presupuesto
-</h2>
-<p class="text-muted mb-4">
-    Modifica el registro para <strong>@Model.NombreCategoria</strong> (@Model.NombreMes @Model.anio)
-</p>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="mb-4">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-3">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+            <h2 class="fw-bold">
+                <i class="fas fa-edit me-2" style="color: #93BFC7;"></i>
+                Editar Presupuesto
+            </h2>
+            <p class="text-muted">Modifica el límite de gasto para esta categoría</p>
+        </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-8 col-lg-6">
-
-                <form asp-action="Editar">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+        <!-- Formulario -->
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4">
+                <form asp-action="Editar" method="post">
                     <input type="hidden" asp-for="id_presupuesto" />
                     <input type="hidden" asp-for="id_usuario" />
+                    
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="id_categoria" class="form-label fw-semibold"></label>
-                        <select asp-for="id_categoria" class="form-select" asp-items="Model.Categorias">
-                            <option value="">-- Seleccione una Categoría --</option>
+                    <!-- Categoría -->
+                    <div class="mb-4">
+                        <label asp-for="id_categoria" class="form-label fw-semibold">
+                            <i class="fas fa-tag me-2 text-primary"></i>Categoría de Gasto
+                        </label>
+                        <select asp-for="id_categoria" asp-items="Model.Categorias" class="form-select form-select-lg">
+                            <option value="">-- Seleccione una categoría --</option>
                         </select>
                         <span asp-validation-for="id_categoria" class="text-danger"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="montoLimite" class="form-label fw-semibold"></label>
-                        <input asp-for="montoLimite" class="form-control" type="number" step="0.01" />
+                    <!-- Monto Límite -->
+                    <div class="mb-4">
+                        <label asp-for="montoLimite" class="form-label fw-semibold">
+                            <i class="fas fa-dollar-sign me-2 text-success"></i>Monto Límite
+                        </label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-dollar-sign text-success"></i>
+                            </span>
+                            <input asp-for="montoLimite" type="number" step="0.01" class="form-control" 
+                                   placeholder="0.00" />
+                        </div>
                         <span asp-validation-for="montoLimite" class="text-danger"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="mes" class="form-label fw-semibold"></label>
-                        <input asp-for="mes" class="form-control" type="number" min="1" max="12" />
-                        <span asp-validation-for="mes" class="text-danger"></span>
+                    <!-- Período -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-calendar-alt me-2 text-warning"></i>Período
+                        </label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="mes" class="form-label small">Mes</label>
+                                <select asp-for="mes" class="form-select">
+                                    <option value="1">Enero</option>
+                                    <option value="2">Febrero</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Mayo</option>
+                                    <option value="6">Junio</option>
+                                    <option value="7">Julio</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Septiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+                                <span asp-validation-for="mes" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="anio" class="form-label small">Año</label>
+                                <select asp-for="anio" class="form-select">
+                                    @for (int i = 2020; i <= 2030; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="anio" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="anio" class="form-label fw-semibold"></label>
-                        <input asp-for="anio" class="form-control" type="number" min="2020" max="2030" />
-                        <span asp-validation-for="anio" class="text-danger"></span>
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-2 mt-4">
-
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i> Guardar Cambios
-                        </button>
-
-                        <form asp-action="Eliminar" method="post" class="d-inline">
-                            <input type="hidden" asp-for="id_presupuesto" />
-                            <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('¿Está seguro de que desea eliminar este presupuesto?');">
-                                <i class="fas fa-trash me-2"></i> Eliminar
-                            </button>
-                        </form>
-
-                        <a asp-action="Index" class="btn btn-secondary">
-                            <i class="fas fa-ban me-2"></i> Cancelar
+                    <!-- Botones -->
+                    <div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancelar
                         </a>
+                        <button type="submit" class="btn btn-lg" 
+                                style="background: linear-gradient(135deg, #93BFC7 0%, #6b9fa8 100%); color: white; font-weight: 600;">
+                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        </button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        // Habilita la validación del lado del cliente
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }
